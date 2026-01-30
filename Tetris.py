@@ -10,6 +10,9 @@ score = 0
 lineCount = 0
 threshold = 1000
 
+
+
+
 hit = dict((i, dict((j, False) for j in range(1,21))) for i in range(1, 11))
 
 rS = dict((i, dict((j, -1) for j in range(1,21))) for i in range(1, 11))
@@ -157,6 +160,7 @@ class block:
                 screen.blit(sprite, (rows[spot[0]],collumns[spot[1]]))
             screen.blit(sprite, (rows[self.xKing],collumns[self.yKing]))
         else:
+            
             for spot in self.others:
                 screen.blit(sprite, (spot[0],spot[1]))
             screen.blit(sprite, (self.xKing,self.yKing))
@@ -385,8 +389,7 @@ def check_lines():
         things = 0
         j += 1
         
-    
-    
+
 
 
 def draw_box(x,y,w,h):
@@ -399,12 +402,14 @@ def show_count():
         count = font2.render(str(types[gum]).zfill(3), True, (255,255,255))
         screen. blit(count, (250, 160 + run))
         run += 50
+    thing = font1.render(str(high_score).zfill(6), True, (225,225,255))
     extra = font1.render(str(score).zfill(6), True, (225,225,255))
     lines = font1.render('LINES - ' + str(lineCount).zfill(3), True, (255,255,255))
     mun = font1.render(str(level).zfill(2), True, (255,255,255))
     screen.blit(extra, (624, 154))
     screen.blit(lines, (304,54))
     screen.blit(mun, (664,404))
+    screen.blit(thing, (624,84))
 
 def make_ui():
     screen.fill(color)
@@ -417,7 +422,6 @@ def make_ui():
 
     screen.blit(next_up, (624,229))
     screen.blit(top, (624,54))
-    screen.blit(thing, (624,84))
     screen.blit(scr, (624, 124))
     screen.blit(lv, (624,374))
 
@@ -475,21 +479,24 @@ def make_ui():
                     else:
                         screen.blit(l, (rows[guy[0]],collumns[guy[1]]))
     
-
-high_score= 5000
+def end_screen():
+    screen.fill(color)
+    screen.blit(over, (280,280))
+high_score= 7000
 
 screen = pygame.display.set_mode((1000, 800))
 clock = pygame.time.Clock()
 color = (125, 125, 125)
 font1 = pygame.font.SysFont('liberationmono', 40)
 font2 = pygame.font.SysFont('liberationmono', 30)
+endFont = pygame.font.SysFont('liberationmono', 80)
 
 next_up = font1.render('NEXT', True, (255, 255, 255))
 top = font1.render('TOP', True, (225,225,255))
-thing = font1.render(str(high_score).zfill(6), True, (225,225,255))
 scr = font1.render('SCORE', True, (255,255,255))
 lv = font1.render('LEVEL', True, (255,255,255))
-
+over = endFont.render('GAME OVER', True, (255,255,255))
+retry = font1.render('RETRY', True,(255,255,255))
 
 # Changing screen color
 screen.fill(color)
@@ -503,7 +510,6 @@ draw_box(100,150,300,354)
 
 screen.blit(next_up, (624,229))
 screen.blit(top, (624,54))
-screen.blit(thing, (624,84))
 screen.blit(scr, (624, 124))
 screen.blit(lv, (624,374))
 pygame.display.flip()
@@ -531,6 +537,8 @@ lLeft_block.reset(160, 360, 'lLeft')
 lRight_block.reset(160, 410, 'lRight')
 str_block.reset(160, 460, 'straight')
 
+width = 400
+height = 480
 
 
 
@@ -548,7 +556,7 @@ str_block.reset(160, 460, 'straight')
 
 
 t = 0
-
+gameOver = True
 # keep game running till running is true
 while running:
     clock.tick(60)
@@ -560,224 +568,265 @@ while running:
         # set running bool to false
         if event.type == pygame.QUIT:
             running = False
-    
-    make_ui()
-    
-    keys = pygame.key.get_pressed()
-
-    if keys[pygame.K_UP]:
-        gaming = True
+    if not gameOver:
+        make_ui()
         
-        try:
-            h = -1
-            w = -1
-            if block1.bType == 'zLeft':
-                if block1. rotation == 1:
-                    if hit[block1.xKing + 1][block1.yKing + 1]:
-                        gaming = False
-                elif block1.rotation == 0:
-                    if hit [block1.xKing - 1][block1.yKing + 1]:
-                        gaming = False
-            if block1.bType == 'zRight':
-                if block1. rotation == 1:
-                    if hit[block1.xKing - 1][block1.yKing - 1]:
-                        gaming = False
-                elif block1.rotation == 0:
-                    if hit [block1.xKing - 1][block1.yKing + 1]:
-                        gaming = False
-            if block1.bType == 'lLeft':
-                if block1. rotation == 3:
-                    if hit[block1.xKing - 1][block1.yKing + 1]:
-                        gaming = False
-                elif block1.rotation == 0:
-                    if hit [block1.xKing - 1][block1.yKing - 1]:
-                        gaming = False
-                elif block1.rotation == 1:
-                    if hit[block1.xKing + 1][block1.yKing - 1]:
-                        gaming = False
-                elif block1.rotation == 2:
-                    if hit[block1.xKing + 1][block1.yKing + 1]:
-                        gaming = False
-            if block1.bType == 'lRight':
-                if block1. rotation == 3:
-                    if hit[block1.xKing + 1][block1.yKing + 1]:
-                        gaming = False
-                elif block1.rotation == 0:
-                    if hit [block1.xKing - 1][block1.yKing + 1]:
-                        gaming = False
-                elif block1.rotation == 1:
-                    if hit[block1.xKing - 1][block1.yKing - 1]:
-                        gaming = False
-                elif block1.rotation == 2:
-                    if hit[block1.xKing + 1][block1.yKing - 1]:
-                        gaming = False
+        keys = pygame.key.get_pressed()
 
-            while h < 2 or (block1.bType == 'straight' and h < 3):
-                if hit[block1.xKing][block1.yKing + h]:
-                    gaming = False
-                h += 1
-            while w < 2 or (block1.bType == 'straight' and w < 3):
-                if hit[block1.xKing + w][block1.yKing]:
-                    gaming = False
-                w += 1
-        except KeyError:
-            pass
-        if gaming:
-            block1.spin()
+        if keys[pygame.K_UP]:
+            gaming = True
             
-            make_ui()
-            pygame.time.delay(100)
-            
-            
-
-    if keys[pygame.K_LEFT]:
-        gaming = True
-        lMax = block1.xKing
-        try:
-            if hit[block1.xKing - 1][block1.yKing]:
-                gaming = False
-        except KeyError:
-            pass
-        for punks in block1.others:
-            if punks[0] < lMax:
-                lMax = punks[0]
             try:
-                if hit[punks[0] - 1][punks[1]]:
-                    gaming = False
+                h = -1
+                w = -1
+                if block1.bType == 'zLeft':
+                    if block1. rotation == 1:
+                        if hit[block1.xKing + 1][block1.yKing + 1]:
+                            gaming = False
+                    elif block1.rotation == 0:
+                        if hit [block1.xKing - 1][block1.yKing + 1]:
+                            gaming = False
+                if block1.bType == 'zRight':
+                    if block1. rotation == 1:
+                        if hit[block1.xKing - 1][block1.yKing - 1]:
+                            gaming = False
+                    elif block1.rotation == 0:
+                        if hit [block1.xKing - 1][block1.yKing + 1]:
+                            gaming = False
+                if block1.bType == 'lLeft':
+                    if block1. rotation == 3:
+                        if hit[block1.xKing - 1][block1.yKing + 1]:
+                            gaming = False
+                    elif block1.rotation == 0:
+                        if hit [block1.xKing - 1][block1.yKing - 1]:
+                            gaming = False
+                    elif block1.rotation == 1:
+                        if hit[block1.xKing + 1][block1.yKing - 1]:
+                            gaming = False
+                    elif block1.rotation == 2:
+                        if hit[block1.xKing + 1][block1.yKing + 1]:
+                            gaming = False
+                if block1.bType == 'lRight':
+                    if block1. rotation == 3:
+                        if hit[block1.xKing + 1][block1.yKing + 1]:
+                            gaming = False
+                    elif block1.rotation == 0:
+                        if hit [block1.xKing - 1][block1.yKing + 1]:
+                            gaming = False
+                    elif block1.rotation == 1:
+                        if hit[block1.xKing - 1][block1.yKing - 1]:
+                            gaming = False
+                    elif block1.rotation == 2:
+                        if hit[block1.xKing + 1][block1.yKing - 1]:
+                            gaming = False
+
+                while h < 2 or (block1.bType == 'straight' and h < 3):
+                    if hit[block1.xKing][block1.yKing + h]:
+                        gaming = False
+                    h += 1
+                while w < 2 or (block1.bType == 'straight' and w < 3):
+                    if hit[block1.xKing + w][block1.yKing]:
+                        gaming = False
+                    w += 1
             except KeyError:
                 pass
-        if lMax > 1 and gaming:
-            block1.moveLeft()
-            make_ui()
-            
-            pygame.time.delay(100)
-        else:
-            continue
-            
-    if keys[pygame.K_RIGHT]:
-        gaming = True
-        rMax = block1.xKing
-        try:
-            if hit[block1.xKing + 1][block1.yKing]:
-                gaming = False
-        except KeyError:
-            pass
-        for punks in block1.others:
-            if punks[0] > rMax:
-                rMax = punks[0]
-            try:
-                if hit[punks[0] + 1][punks[1]]:
-                    gaming = False
-            except KeyError:
-                pass
-        if rMax < 10 and gaming:
-            block1.moveRight()
-            make_ui()
-            
-            pygame.time.delay(100)
-        else:
-            continue
+            if gaming:
+                block1.spin()
                 
-            
-    if keys[pygame.K_DOWN]:
-        gaming = True
-        yMax = block1.yKing
-        try:
-            if hit[block1.xKing][block1.yKing + 1]:
-                gaming = False
-        except KeyError:
-            pass
-        for punks in block1.others:
-            if punks[1] > yMax:
-                yMax = punks[1]
+                make_ui()
+                pygame.time.delay(100)
+                
+                
+
+        if keys[pygame.K_LEFT]:
+            gaming = True
+            lMax = block1.xKing
             try:
-                if hit[punks[0]][punks[1] + 1]:
+                if hit[block1.xKing - 1][block1.yKing]:
                     gaming = False
             except KeyError:
                 pass
-        if yMax < 20 and gaming:
-            block1.fall()
-            
-            make_ui()
-            
-            pygame.time.delay(dela)
-        else:
-            
-            
-            block1.move = False
-            rS[block1.xKing][block1.yKing] = block1.spType
-            hit[block1.xKing][block1.yKing] = True
-            
-            for pair in range(len(block1.others)):
-               
-                rS[block1.others[pair][0]][block1.others[pair][1]] = block1.spType
-                hit[block1.others[pair][0]][block1.others[pair][1]] = True
-            
-            block1.reset(5,1,block2.bType)
-            block2 = block(xKing=660, yKing=289)
-            while block1.bType == block2.bType:
-                types[block2.bType] -= 1
-                block2 = block(xKing=660, yKing=289)
+            for punks in block1.others:
+                if punks[0] < lMax:
+                    lMax = punks[0]
+                try:
+                    if hit[punks[0] - 1][punks[1]]:
+                        gaming = False
+                except KeyError:
+                    pass
+            if lMax > 1 and gaming:
+                block1.moveLeft()
+                make_ui()
+                
+                pygame.time.delay(100)
+            else:
+                continue
+                
+        if keys[pygame.K_RIGHT]:
+            gaming = True
+            rMax = block1.xKing
+            try:
+                if hit[block1.xKing + 1][block1.yKing]:
+                    gaming = False
+            except KeyError:
+                pass
+            for punks in block1.others:
+                if punks[0] > rMax:
+                    rMax = punks[0]
+                try:
+                    if hit[punks[0] + 1][punks[1]]:
+                        gaming = False
+                except KeyError:
+                    pass
+            if rMax < 10 and gaming:
+                block1.moveRight()
+                make_ui()
+                
+                pygame.time.delay(100)
+            else:
+                continue
 
-            check_lines()
-            
-            pygame.time.delay(dela)
+        if keys[pygame.K_p]:
+            if block1.move:
+                block1.move = False
+                block1.rotate = False
+            else:
+                block1.move = True
+                block1.rotate = True
+            pygame.time.delay(300)
+                
+        if keys[pygame.K_DOWN]:
+            gaming = True
+            yMax = block1.yKing
+            try:
+                if hit[block1.xKing][block1.yKing + 1]:
+                    gaming = False
+            except KeyError:
+                pass
+            for punks in block1.others:
+                if punks[1] > yMax:
+                    yMax = punks[1]
+                try:
+                    if hit[punks[0]][punks[1] + 1]:
+                        gaming = False
+                except KeyError:
+                    pass
+            if yMax < 20 and gaming:
+                block1.fall()
+                
+                make_ui()
+                
+                pygame.time.delay(dela)
+            else:
+                
+                
+                block1.move = False
+                rS[block1.xKing][block1.yKing] = block1.spType
+                hit[block1.xKing][block1.yKing] = True
+                
+                for pair in range(len(block1.others)):
+                
+                    rS[block1.others[pair][0]][block1.others[pair][1]] = block1.spType
+                    hit[block1.others[pair][0]][block1.others[pair][1]] = True
+                
+                block1.reset(5,1,block2.bType)
+                block2 = block(xKing=660, yKing=289)
+                while block1.bType == block2.bType:
+                    types[block2.bType] -= 1
+                    block2 = block(xKing=660, yKing=289)
+                if(hit[block1.xKing][block1.yKing]):
+                    gameOver = True
+                
+
+                check_lines()
+                
+                pygame.time.delay(dela)
+        
+        if t >= 60:
+            gaming = True
+            yMax = block1.yKing
+            try:
+                if hit[block1.xKing][block1.yKing + 1]:
+                    gaming = False
+            except KeyError:
+                pass
+            for punks in block1.others:
+                if punks[1] > yMax:
+                    yMax = punks[1]
+                try:
+                    if hit[punks[0]][punks[1] + 1]:
+                        gaming = False
+                except KeyError:
+                    pass
+            if yMax < 20 and gaming:
+                block1.fall()
+                
+                make_ui()
+                t = 0
+                
+                
+                
+            else:
+                
+                
+                
+                rS[block1.xKing][block1.yKing] = block1.spType
+                hit[block1.xKing][block1.yKing] = True
+                
+                for pair in range(len(block1.others)):
+                
+                    rS[block1.others[pair][0]][block1.others[pair][1]] = block1.spType
+                    hit[block1.others[pair][0]][block1.others[pair][1]] = True
+                
+                block1.reset(5,0,block2.bType)
+                block2 = block(xKing=660, yKing=289)
+                while block1.bType == block2.bType:
+                    types[block2.bType] -= 1
+                    block2 = block(xKing=660, yKing=289)
+                try:
+                    if(hit[block1.xKing][block1.yKing]):
+                        gameOver = True
+                except KeyError:
+                    pass
+
+                check_lines()
+                
+                pygame.time.delay(dela)
+                
+        else:
+            t = t + (1 + level)
+        if score >= threshold:
+            level += 1
+            threshold += 1000
+        if score > high_score:
+            high_score = score
     
-    if t >= 60:
-        gaming = True
-        yMax = block1.yKing
-        try:
-            if hit[block1.xKing][block1.yKing + 1]:
-                gaming = False
-        except KeyError:
-            pass
-        for punks in block1.others:
-            if punks[1] > yMax:
-                yMax = punks[1]
-            try:
-                if hit[punks[0]][punks[1] + 1]:
-                    gaming = False
-            except KeyError:
-                pass
-        if yMax < 20 and gaming:
-            block1.fall()
-            
-            make_ui()
-            t = 0
-            
-            
-            
-        else:
-            
-            
-            
-            rS[block1.xKing][block1.yKing] = block1.spType
-            hit[block1.xKing][block1.yKing] = True
-            
-            for pair in range(len(block1.others)):
-               
-                rS[block1.others[pair][0]][block1.others[pair][1]] = block1.spType
-                hit[block1.others[pair][0]][block1.others[pair][1]] = True
-            
-            block1.reset(5,0,block2.bType)
-            block2 = block(xKing=660, yKing=289)
-            while block1.bType == block2.bType:
-                types[block2.bType] -= 1
-                block2 = block(xKing=660, yKing=289)
-
-            check_lines()
-            
-            pygame.time.delay(dela)
-            
     else:
-        t = t + (1 + level)
-    if score >= threshold:
-        level += 1
-        threshold += 1000
-    if score > high_score:
-        high_score = score
-    
-    
+        end_screen()
+        
+        mouse = pygame.mouse.get_pos()
+        if width <= mouse[0] <= width+140 and height <= mouse[1] <= height+40:
+            draw_box(width,height,140,50)
+            screen.blit(retry, (width + 10,height + 5))
+        
+        else:
+            pygame.draw.rect(screen,(0,0,0),[width,height,140,50])
+            screen.blit(retry, (width + 10,height + 5))
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            
+            #if the mouse is clicked on the
+            # button the game is terminated
+            if width <= mouse[0] <= width + 140 and height <= mouse[1] <= height+50:
+                gameOver = False
+                for space in hit:
+                    for git in hit[space]:
+                        hit[space][git] = False
+                        rS[space][git] = -1
+                score = 0
+                lineCount = 0
+                level = 0
+                for bks in types:
+                    types[bks] = 0
     
     
 
