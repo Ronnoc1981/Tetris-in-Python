@@ -210,7 +210,7 @@ class block:
 
     def spin(self):
         
-        if self.rotate:
+        if self.rotate and self.move:
             i = 1
             
             if self.bType == 'T':
@@ -482,7 +482,7 @@ def make_ui():
 def end_screen():
     screen.fill(color)
     screen.blit(over, (280,280))
-high_score= 7000
+high_score= 5000
 
 screen = pygame.display.set_mode((1000, 800))
 clock = pygame.time.Clock()
@@ -497,6 +497,7 @@ scr = font1.render('SCORE', True, (255,255,255))
 lv = font1.render('LEVEL', True, (255,255,255))
 over = endFont.render('GAME OVER', True, (255,255,255))
 retry = font1.render('RETRY', True,(255,255,255))
+
 
 # Changing screen color
 screen.fill(color)
@@ -556,7 +557,7 @@ height = 480
 
 
 t = 0
-gameOver = True
+gameOver = False
 # keep game running till running is true
 while running:
     clock.tick(60)
@@ -634,7 +635,7 @@ while running:
                 block1.spin()
                 
                 make_ui()
-                pygame.time.delay(100)
+                pygame.time.delay(150)
                 
                 
 
@@ -658,7 +659,7 @@ while running:
                 block1.moveLeft()
                 make_ui()
                 
-                pygame.time.delay(100)
+                pygame.time.delay(150)
             else:
                 continue
                 
@@ -682,17 +683,15 @@ while running:
                 block1.moveRight()
                 make_ui()
                 
-                pygame.time.delay(100)
+                pygame.time.delay(150)
             else:
                 continue
 
         if keys[pygame.K_p]:
             if block1.move:
                 block1.move = False
-                block1.rotate = False
             else:
                 block1.move = True
-                block1.rotate = True
             pygame.time.delay(300)
                 
         if keys[pygame.K_DOWN]:
@@ -800,6 +799,8 @@ while running:
             threshold += 1000
         if score > high_score:
             high_score = score
+            high_beat = True
+
     
     else:
         end_screen()
@@ -812,6 +813,7 @@ while running:
         else:
             pygame.draw.rect(screen,(0,0,0),[width,height,140,50])
             screen.blit(retry, (width + 10,height + 5))
+        
         if event.type == pygame.MOUSEBUTTONDOWN:
             
             #if the mouse is clicked on the
