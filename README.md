@@ -16,4 +16,7 @@ The controls for the game are pretty simple. to move the blocks, use the Left an
 
 The overall speed and level will increase with every 1000 points you accumulate. You get 100 points for every line clear.
 
+
+##
+
 [Pygame documentation](https://pypi.org/project/pygame/)
