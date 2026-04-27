@@ -5,8 +5,6 @@ This is a program which runs a primitive version of Tetris in the Python languag
 ## Setup
 
 1. After downloading the files, make sure they all stay in that folder.
-2. go into your computer's console and navigate to the folder using ''' 
-    cd <folder_name> 
-'''
+2. go into your computer's console and navigate to the folder using 'cd <folder_name>'
 
 
